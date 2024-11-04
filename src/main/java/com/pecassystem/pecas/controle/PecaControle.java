@@ -32,45 +32,69 @@ public class PecaControle {
 
    
     @GetMapping("/listar")
-    public Iterable<Peca> listar(){
-        return pecaServico.listar();
+public ResponseEntity<Iterable<Peca>> listar() {
+    Iterable<Peca> pecas = pecaServico.listar();
+    
+    if (pecas.iterator().hasNext()) {
+        return new ResponseEntity<>(pecas, HttpStatus.OK);
+    } else {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Retorna 204 se a lista estiver vazia
     }
+}
+
 
     
     @PostMapping("/cadastrar")
-    public ResponseEntity<?> cadastrar(@Valid @RequestBody Peca peca, BindingResult result) {
+public ResponseEntity<?> cadastrar(@Valid @RequestBody Peca peca, BindingResult result) {
 
-        // Verifica se há erros de validação
-        if (result.hasErrors()) {
-            // Captura a primeira mensagem de erro
-            String errorMessage = result.getFieldError().getDefaultMessage();
-            respostaModelo.setMensagen(errorMessage);
-            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
-        }
-
-        // Caso não haja erros, chama o serviço para cadastrar a peça
-        return pecaServico.cadastrar(peca);
+    if (result.hasErrors()) {
+        String errorMessage = result.getFieldError().getDefaultMessage();
+        respostaModelo.setMensagen(errorMessage);
+        return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
     }
 
-    @PutMapping("/alterar")
-    public ResponseEntity<?> alterar(@Valid @RequestBody Peca peca, BindingResult result) {
+    try {
+        Peca novaPeca = pecaServico.cadastrar(peca);
+        return new ResponseEntity<>(novaPeca, HttpStatus.CREATED);
+    } catch (RuntimeException e) {
+        respostaModelo.setMensagen(e.getMessage());
+        return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
 
-        // Verifica se há erros de validação
-        if (result.hasErrors()) {
-            // Captura a primeira mensagem de erro
-            String errorMessage = result.getFieldError().getDefaultMessage();
-            respostaModelo.setMensagen(errorMessage);
-            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
-        }
 
-        // Caso não haja erros, chama o serviço para cadastrar a peça
-        return pecaServico.alterar(peca);
+@PutMapping("/alterar")
+public ResponseEntity<?> alterar(@Valid @RequestBody Peca peca, BindingResult result) {
+
+    // Verifica se há erros de validação
+    if (result.hasErrors()) {
+        String errorMessage = result.getFieldError().getDefaultMessage();
+        respostaModelo.setMensagen(errorMessage);
+        return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
     }
 
-    @DeleteMapping("/remover/{id}")
-    public ResponseEntity<RespostaModelo> remover(@PathVariable int id){
-        return pecaServico.remover(id);
+    try {
+        Peca novaPeca = pecaServico.alterar(peca);
+        return new ResponseEntity<>(novaPeca, HttpStatus.OK);
+    } catch (RuntimeException e) {
+        respostaModelo.setMensagen(e.getMessage());
+        return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
+
+
+@DeleteMapping("/remover/{id}")
+public ResponseEntity<RespostaModelo> remover(@PathVariable int id) {
+    try {
+        pecaServico.remover(id);
+        respostaModelo.setMensagen("Peça removida com sucesso");
+        return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
+    } catch (RuntimeException e) {
+        respostaModelo.setMensagen(e.getMessage());
+        return new ResponseEntity<>(respostaModelo, HttpStatus.NOT_FOUND);
+    }
+}
+
 
 }
 

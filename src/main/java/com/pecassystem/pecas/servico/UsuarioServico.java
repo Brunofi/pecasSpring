@@ -1,37 +1,33 @@
 package com.pecassystem.pecas.servico;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
-import com.pecassystem.pecas.modelo.RespostaModelo;
+
+import org.springframework.stereotype.Service;
+
+
 import com.pecassystem.pecas.modelo.Usuario;
 import com.pecassystem.pecas.repositorio.UsuarioRepositorio;
 
+@Service
 public class UsuarioServico {
-
-    @Autowired
-    private RespostaModelo respostaModelo;
 
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
-    public Iterable<Usuario> listar(){
+    public Usuario cadastrar(Usuario usuario) throws Exception {
+        return usuarioRepositorio.save(usuario);
+    }
+
+    public Iterable<Usuario> listar() {
         return usuarioRepositorio.findAll();
     }
 
-    public ResponseEntity<?> cadastrar(Usuario usuario){
-
-        try {
-            Usuario novUsuario = usuarioRepositorio.save(usuario);
-            return new ResponseEntity<>(novUsuario,HttpStatus.CREATED);
-        } catch (Exception e) {
-            respostaModelo.setMensagen("Erro ao  cadastrar usuario" + e.getMessage());
-            return new ResponseEntity<>(respostaModelo,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
+    public Usuario alterar(Usuario usuario) throws Exception {
+        return usuarioRepositorio.save(usuario);
     }
 
-    
-
+    public void remover(int id) throws Exception {
+        usuarioRepositorio.deleteById(id);
+    }
 }
