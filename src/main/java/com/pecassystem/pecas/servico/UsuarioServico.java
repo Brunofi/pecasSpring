@@ -1,5 +1,7 @@
 package com.pecassystem.pecas.servico;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -30,4 +32,9 @@ public class UsuarioServico {
     public void remover(int id) throws Exception {
         usuarioRepositorio.deleteById(id);
     }
+
+    public Optional<Usuario> buscarPorLoginESenha(String login, String senha) {
+        return usuarioRepositorio.findByLoginAndSenha(login, senha);
+    }
+
 }

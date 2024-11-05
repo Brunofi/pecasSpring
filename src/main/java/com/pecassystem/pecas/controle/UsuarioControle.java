@@ -1,5 +1,7 @@
 package com.pecassystem.pecas.controle;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-
-
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -86,5 +85,16 @@ public class UsuarioControle {
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-}
 
+    @PostMapping("/login")
+    public ResponseEntity<?> autenticar(@RequestBody Usuario usuario) {
+        Optional<Usuario> usuarioExistente = usuarioServico.buscarPorLoginESenha(usuario.getLogin(),
+                usuario.getSenha());
+        if (usuarioExistente.isPresent()) {
+            return ResponseEntity.ok("Login bem-sucedido");
+        } else {
+            respostaModelo.setMensagen("Login ou senha incorretos");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respostaModelo);
+        }
+    }
+}
