@@ -11,5 +11,6 @@ import lombok.Setter;
 public class RespostaModelo {
 
     private String mensagen;
+    private Object data;
     
 }

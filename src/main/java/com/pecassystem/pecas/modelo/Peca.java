@@ -64,7 +64,7 @@ public class Peca {
     @NotNull(message = "Preço é obrigatório")
     private BigDecimal preco;
 
-    private String ptnumberSimilar;
+    private String partnumberSimilar;
 
     public enum Estado {
         NOVA, REC

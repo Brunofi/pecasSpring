@@ -20,6 +20,39 @@ public class PecaServico {
         return pecaRepositorio.findAll();
     }
 
+     // Método para buscar peças por partNumber
+     public Iterable<Peca> listarPorPartnumber(String partnumber) {
+        try {
+            return pecaRepositorio.findByPartnumberContaining(partnumber);
+            
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao procurar peças: " + e.getMessage());
+           
+        }
+        
+    }
+
+    // Método para buscar peças por nome
+    public Iterable<Peca> listarPorNome(String nome) {
+        try {
+            return pecaRepositorio.findByNomeContaining(nome);
+            
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao procurar peças: " + e.getMessage());
+           
+        }
+        
+    }
+
+    public Peca buscarPorId(int id) {
+        try {
+            return pecaRepositorio.findById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar peça: " + e.getMessage());
+        }
+        
+    }
+
     
 
     public Peca cadastrar(Peca peca) {
