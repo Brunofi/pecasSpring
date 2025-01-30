@@ -44,7 +44,7 @@ public class UsuarioControle {
     public ResponseEntity<?> cadastrar(@Valid @RequestBody Usuario usuario, BindingResult result) {
         if (result.hasErrors()) {
             String errorMessage = result.getFieldError().getDefaultMessage();
-            respostaModelo.setMensagen(errorMessage);
+            respostaModelo.setMensagem(errorMessage);
             return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
         }
 
@@ -52,7 +52,7 @@ public class UsuarioControle {
             Usuario novoUsuario = usuarioServico.cadastrar(usuario);
             return new ResponseEntity<>(novoUsuario, HttpStatus.CREATED);
         } catch (Exception e) {
-            respostaModelo.setMensagen("Erro ao cadastrar usuário: " + e.getMessage());
+            respostaModelo.setMensagem("Erro ao cadastrar usuário: " + e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -61,7 +61,7 @@ public class UsuarioControle {
     public ResponseEntity<?> alterar(@Valid @RequestBody Usuario usuario, BindingResult result) {
         if (result.hasErrors()) {
             String errorMessage = result.getFieldError().getDefaultMessage();
-            respostaModelo.setMensagen(errorMessage);
+            respostaModelo.setMensagem(errorMessage);
             return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
         }
 
@@ -69,7 +69,7 @@ public class UsuarioControle {
             Usuario usuarioAtualizado = usuarioServico.alterar(usuario);
             return new ResponseEntity<>(usuarioAtualizado, HttpStatus.OK);
         } catch (Exception e) {
-            respostaModelo.setMensagen("Erro ao alterar usuário: " + e.getMessage());
+            respostaModelo.setMensagem("Erro ao alterar usuário: " + e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -78,10 +78,10 @@ public class UsuarioControle {
     public ResponseEntity<RespostaModelo> remover(@PathVariable int id) {
         try {
             usuarioServico.remover(id);
-            respostaModelo.setMensagen("Usuário removido com sucesso.");
+            respostaModelo.setMensagem("Usuário removido com sucesso.");
             return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
         } catch (Exception e) {
-            respostaModelo.setMensagen("Erro ao remover usuário: " + e.getMessage());
+            respostaModelo.setMensagem("Erro ao remover usuário: " + e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -93,7 +93,7 @@ public class UsuarioControle {
         if (usuarioExistente.isPresent()) {
             return ResponseEntity.ok("Login bem-sucedido");
         } else {
-            respostaModelo.setMensagen("Login ou senha incorretos");
+            respostaModelo.setMensagem("Login ou senha incorretos");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respostaModelo);
         }
     }

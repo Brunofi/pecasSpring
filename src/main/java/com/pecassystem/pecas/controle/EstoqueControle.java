@@ -119,8 +119,39 @@ public class EstoqueControle {
         }
     }
 
+    @PostMapping("/cadastrar-com-ids")
+    public ResponseEntity<?> cadastrarComIds(@RequestParam int idPeca, @RequestParam int idLocacao) {
+        respostaModelo = new RespostaModelo(); // Criação do modelo de resposta
 
+        try {
+            Estoque estoque = estoqueServico.cadastrarComIds(idPeca, idLocacao);
+            respostaModelo.setMensagem("Estoque cadastrado com sucesso!");
+            respostaModelo.setData(estoque);
+            return new ResponseEntity<>(respostaModelo, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            respostaModelo.setMensagem(e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
+        }
+    }
 
+    // Altera a quantidade de uma peça no estoque
+    @PutMapping("/alterar-quantidade/{id}")
+    public ResponseEntity<?> alterarQuantidade(@PathVariable int id, @RequestParam int quantidade) {
+        respostaModelo = new RespostaModelo(); // Criação do modelo de resposta
 
+        try {
+            // Chama o serviço para alterar a quantidade
+            Estoque estoqueAtualizado = estoqueServico.alterarQuantidade(id, quantidade);
+
+            // Configura a resposta de sucesso
+            respostaModelo.setMensagem("Quantidade alterada com sucesso!");
+            respostaModelo.setData(estoqueAtualizado);
+            return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            // Configura a resposta de erro
+            respostaModelo.setMensagem(e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }

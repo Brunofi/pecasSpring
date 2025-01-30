@@ -59,7 +59,7 @@ public class LocacaoControle {
             Locacao locacao = locacaoServico.buscarPorId(id);
             return new ResponseEntity<>(locacao, HttpStatus.OK);
         } catch (RuntimeException e) {
-            respostaModelo.setMensagen(e.getMessage());
+            respostaModelo.setMensagem(e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.NOT_FOUND);
         }
     }
@@ -69,17 +69,17 @@ public class LocacaoControle {
     public ResponseEntity<?> cadastrar(@Valid @RequestBody Locacao locacao, BindingResult result) {
         if (result.hasErrors()) {
             String errorMessage = result.getFieldError().getDefaultMessage();
-            respostaModelo.setMensagen(errorMessage);
+            respostaModelo.setMensagem(errorMessage);
             return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
         }
 
         try {
             Locacao novaLocacao = locacaoServico.cadastrar(locacao);
-            respostaModelo.setMensagen("Locação cadastrada com sucesso!");
+            respostaModelo.setMensagem("Locação cadastrada com sucesso!");
             respostaModelo.setData(novaLocacao);
             return new ResponseEntity<>(respostaModelo, HttpStatus.CREATED);
         } catch (RuntimeException e) {
-            respostaModelo.setMensagen(e.getMessage());
+            respostaModelo.setMensagem(e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -89,17 +89,17 @@ public class LocacaoControle {
     public ResponseEntity<?> alterar(@Valid @RequestBody Locacao locacao, BindingResult result) {
         if (result.hasErrors()) {
             String errorMessage = result.getFieldError().getDefaultMessage();
-            respostaModelo.setMensagen(errorMessage);
+            respostaModelo.setMensagem(errorMessage);
             return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
         }
 
         try {
             Locacao novaLocacao = locacaoServico.alterar(locacao);
-            respostaModelo.setMensagen("Locação alterada com sucesso!");
+            respostaModelo.setMensagem("Locação alterada com sucesso!");
             respostaModelo.setData(novaLocacao);
             return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
         } catch (RuntimeException e) {
-            respostaModelo.setMensagen(e.getMessage());
+            respostaModelo.setMensagem(e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -109,10 +109,10 @@ public class LocacaoControle {
     public ResponseEntity<RespostaModelo> remover(@PathVariable int id) {
         try {
             locacaoServico.remover(id);
-            respostaModelo.setMensagen("Locação removida com sucesso");
+            respostaModelo.setMensagem("Locação removida com sucesso");
             return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
         } catch (RuntimeException e) {
-            respostaModelo.setMensagen(e.getMessage());
+            respostaModelo.setMensagem(e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.NOT_FOUND);
         }
     }

@@ -11,13 +11,8 @@ import java.util.List;
 public interface EstoqueRepositorio extends CrudRepository<Estoque, Integer> {
 
     // Busca estoques pelo part number da peça
-    /* 
-    @Query("SELECT e FROM Estoque e WHERE e.peca.partnumber LIKE %:partnumber%")
-    List<Estoque> findByPartNumber(@Param("partnumber") String partnumber);
-*/
     @Query("SELECT e FROM Estoque e JOIN e.peca p WHERE p.partnumber LIKE %:partnumber%")
-List<Estoque> findByPartNumber(@Param("partnumber") String partnumber);
-
+    List<Estoque> findByPartNumber(@Param("partnumber") String partnumber);
 
     // Busca estoques pelo nome da peça
     @Query("SELECT e FROM Estoque e WHERE e.peca.nome LIKE %:nome%")

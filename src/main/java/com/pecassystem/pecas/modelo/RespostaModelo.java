@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class RespostaModelo {
 
-    private String mensagen;
+    private String mensagem;
     private Object data;
     
 }

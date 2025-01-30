@@ -71,7 +71,7 @@ public class PecaControle {
             Peca peca = pecaServico.buscarPorId(id);
             return new ResponseEntity<>(peca, HttpStatus.OK);
         } catch (RuntimeException e) {
-            respostaModelo.setMensagen(e.getMessage());
+            respostaModelo.setMensagem(e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.NOT_FOUND);
         }
     }
@@ -80,17 +80,17 @@ public class PecaControle {
 public ResponseEntity<?> cadastrar(@Valid @RequestBody Peca peca, BindingResult result) {
     if (result.hasErrors()) {
         String errorMessage = result.getFieldError().getDefaultMessage();
-        respostaModelo.setMensagen(errorMessage);
+        respostaModelo.setMensagem(errorMessage);
         return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
     }
 
     try {
         Peca novaPeca = pecaServico.cadastrar(peca);
-        respostaModelo.setMensagen("Peça cadastrada com sucesso!");
+        respostaModelo.setMensagem("Peça cadastrada com sucesso!");
         respostaModelo.setData(novaPeca); 
         return new ResponseEntity<>(respostaModelo, HttpStatus.CREATED);
     } catch (RuntimeException e) {
-        respostaModelo.setMensagen(e.getMessage());
+        respostaModelo.setMensagem(e.getMessage());
         return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
@@ -99,17 +99,17 @@ public ResponseEntity<?> cadastrar(@Valid @RequestBody Peca peca, BindingResult 
 public ResponseEntity<?> alterar(@Valid @RequestBody Peca peca, BindingResult result) {
     if (result.hasErrors()) {
         String errorMessage = result.getFieldError().getDefaultMessage();
-        respostaModelo.setMensagen(errorMessage);
+        respostaModelo.setMensagem(errorMessage);
         return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
     }
 
     try {
         Peca novaPeca = pecaServico.alterar(peca);
-        respostaModelo.setMensagen("Peça alterada com sucesso!");
+        respostaModelo.setMensagem("Peça alterada com sucesso!");
         respostaModelo.setData(novaPeca);
         return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
     } catch (RuntimeException e) {
-        respostaModelo.setMensagen(e.getMessage());
+        respostaModelo.setMensagem(e.getMessage());
         return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
@@ -119,10 +119,10 @@ public ResponseEntity<?> alterar(@Valid @RequestBody Peca peca, BindingResult re
     public ResponseEntity<RespostaModelo> remover(@PathVariable int id) {
         try {
             pecaServico.remover(id);
-            respostaModelo.setMensagen("Peça removida com sucesso");
+            respostaModelo.setMensagem("Peça removida com sucesso");
             return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
         } catch (RuntimeException e) {
-            respostaModelo.setMensagen(e.getMessage());
+            respostaModelo.setMensagem(e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.NOT_FOUND);
         }
     }
