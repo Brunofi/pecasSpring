@@ -37,4 +37,8 @@ public class UsuarioServico {
         return usuarioRepositorio.findByLoginAndSenha(login, senha);
     }
 
+    public Optional<Usuario> buscarPorEmailESenha(String email, String senha) {
+        return usuarioRepositorio.findByEmailAndSenha(email, senha);
+    }
+
 }

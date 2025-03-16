@@ -26,7 +26,14 @@ public class SaidaControle {
         respostaModelo = new RespostaModelo();
         try {
             Saida saidaCadastrada = saidaServico.cadastrar(saida);
-            respostaModelo.setMensagem("Saída cadastrada com sucesso!");
+
+            // Monta a mensagem de sucesso
+            String mensagem = "Saída cadastrada com sucesso!";
+            if (!saida.getTipoConsumo().equals("Vale-Peça")) {
+                mensagem += " Débito no estoque realizado com sucesso.";
+            }
+
+            respostaModelo.setMensagem(mensagem);
             respostaModelo.setData(saidaCadastrada);
             return new ResponseEntity<>(respostaModelo, HttpStatus.CREATED);
         } catch (RuntimeException e) {
@@ -47,7 +54,7 @@ public class SaidaControle {
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+
     @GetMapping("/{id}")
     public ResponseEntity<RespostaModelo> buscarPorId(@PathVariable int id) {
         respostaModelo = new RespostaModelo();
@@ -60,7 +67,6 @@ public class SaidaControle {
             return new ResponseEntity<>(respostaModelo, HttpStatus.NOT_FOUND);
         }
     }
-    
 
     @PutMapping("/{id}")
     public ResponseEntity<RespostaModelo> atualizar(@PathVariable int id, @RequestBody Saida saida) {
@@ -90,4 +96,3 @@ public class SaidaControle {
         }
     }
 }
-

@@ -1,5 +1,7 @@
 package com.pecassystem.pecas.controle;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class UsuarioControle {
 
     @Autowired
     private RespostaModelo respostaModelo;
+
+    @Autowired
+    private com.pecassystem.pecas.servico.JwtService JwtService;
 
     @GetMapping("/listar")
     public ResponseEntity<Iterable<Usuario>> listar() {
@@ -86,12 +91,24 @@ public class UsuarioControle {
         }
     }
 
+    // src/main/java/com/pecassystem/pecas/controle/UsuarioControle.java
     @PostMapping("/login")
     public ResponseEntity<?> autenticar(@RequestBody Usuario usuario) {
-        Optional<Usuario> usuarioExistente = usuarioServico.buscarPorLoginESenha(usuario.getLogin(),
-                usuario.getSenha());
+        Optional<Usuario> usuarioExistente = usuarioServico.buscarPorEmailESenha(usuario.getEmail(), usuario.getSenha());
         if (usuarioExistente.isPresent()) {
-            return ResponseEntity.ok("Login bem-sucedido");
+            Usuario usuarioLogado = usuarioExistente.get();
+            String token = JwtService.generateToken(usuarioLogado.getLogin(),
+             usuarioLogado.getPerfil(),
+             usuarioLogado.getNome()
+             ); // Passa login e perfil
+            
+            // Cria um objeto de resposta com token e perfil
+            Map<String, Object> resposta = new HashMap<>();
+            resposta.put("token", token);
+            resposta.put("perfil", usuarioLogado.getPerfil());
+            resposta.put("nome", usuarioLogado.getNome());
+            
+            return ResponseEntity.ok(resposta);
         } else {
             respostaModelo.setMensagem("Login ou senha incorretos");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(respostaModelo);

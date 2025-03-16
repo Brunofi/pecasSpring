@@ -100,6 +100,15 @@ public class EstoqueServico {
         }
     }
 
+    // Busca estoques pelo nome da peça
+    public List<Estoque> buscarPorIdPeca(int idPeca) {
+        try {
+            return estoqueRepositorio.findByIdpeca(idPeca);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar estoques pelo id da peça: " + e.getMessage());
+        }
+    }
+
     // Busca estoques pela locação
     public List<Estoque> buscarPorLocacao(String locacao) {
         try {
@@ -115,6 +124,11 @@ public class EstoqueServico {
             // Busca o estoque pelo ID
             Estoque estoque = estoqueRepositorio.findById(id)
                     .orElseThrow(() -> new RuntimeException("Estoque não encontrado com o ID: " + id));
+
+            // Valida a nova quantidade
+            if (novaQuantidade < 0) {
+                throw new RuntimeException("A quantidade do estoque não pode ser negativa.");
+            }
 
             // Atualiza a quantidade
             estoque.setQuantidade(novaQuantidade);
