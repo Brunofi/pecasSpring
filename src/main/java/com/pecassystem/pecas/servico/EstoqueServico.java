@@ -103,7 +103,7 @@ public class EstoqueServico {
     // Busca estoques pelo nome da peça
     public List<Estoque> buscarPorIdPeca(int idPeca) {
         try {
-            return estoqueRepositorio.findByIdpeca(idPeca);
+            return estoqueRepositorio.findByPecaId(idPeca);
         } catch (Exception e) {
             throw new RuntimeException("Erro ao buscar estoques pelo id da peça: " + e.getMessage());
         }

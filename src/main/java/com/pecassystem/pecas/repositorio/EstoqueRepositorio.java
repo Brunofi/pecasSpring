@@ -18,9 +18,9 @@ public interface EstoqueRepositorio extends CrudRepository<Estoque, Integer> {
     @Query("SELECT e FROM Estoque e WHERE e.peca.nome LIKE %:nome%")
     List<Estoque> findByNomePeca(@Param("nome") String nome);
 
-     // Busca estoques pelo nome da peça
-     @Query("SELECT e FROM Estoque e WHERE e.peca.idpeca LIKE %:idepeca%")
-     List<Estoque> findByIdpeca(@Param("idpeca") int idpeca);
+    // Busca estoques pelo id da peça
+    // Versão simplificada usando convenção de nomes
+    List<Estoque> findByPecaId(int id);
 
     // Busca estoques pela locação
     @Query("SELECT e FROM Estoque e WHERE e.locacao.locacao LIKE %:locacao%")
