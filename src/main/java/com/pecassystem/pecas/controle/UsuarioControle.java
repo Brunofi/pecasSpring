@@ -61,23 +61,28 @@ public class UsuarioControle {
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
 
-    @PutMapping("/alterar")
-    public ResponseEntity<?> alterar(@Valid @RequestBody Usuario usuario, BindingResult result) {
-        if (result.hasErrors()) {
-            String errorMessage = result.getFieldError().getDefaultMessage();
-            respostaModelo.setMensagem(errorMessage);
-            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            Usuario usuarioAtualizado = usuarioServico.alterar(usuario);
-            return new ResponseEntity<>(usuarioAtualizado, HttpStatus.OK);
-        } catch (Exception e) {
-            respostaModelo.setMensagem("Erro ao alterar usuário: " + e.getMessage());
-            return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        @PutMapping("/alterar")
+public ResponseEntity<RespostaModelo> alterar(@Valid @RequestBody Usuario usuario, BindingResult result) {
+    respostaModelo = new RespostaModelo(); // Reinicia o modelo de resposta
+    
+    if (result.hasErrors()) {
+        String errorMessage = result.getFieldError().getDefaultMessage();
+        respostaModelo.setMensagem(errorMessage);
+        return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
     }
+
+    try {
+        Usuario usuarioAtualizado = usuarioServico.alterar(usuario);
+        respostaModelo.setMensagem("Usuário alterado com sucesso!");
+        respostaModelo.setData(usuarioAtualizado); // Opcional: incluir os dados atualizados
+        return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
+    } catch (Exception e) {
+        respostaModelo.setMensagem("Erro ao alterar usuário: " + e.getMessage());
+        return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
 
     @DeleteMapping("/remover/{id}")
     public ResponseEntity<RespostaModelo> remover(@PathVariable int id) {
