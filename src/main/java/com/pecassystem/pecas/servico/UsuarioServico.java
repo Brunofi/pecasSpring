@@ -17,6 +17,7 @@ public class UsuarioServico {
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
+
     public Usuario cadastrar(Usuario usuario) throws Exception {
         return usuarioRepositorio.save(usuario);
     }

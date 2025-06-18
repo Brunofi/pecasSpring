@@ -49,7 +49,7 @@ public class Saida {
     @Column(name = "sessao", length = 20, nullable = false)
     private String sessao;
 
-    @Column(name = "chassis", length = 12, nullable = false)
+    @Column(name = "chassis", length = 16, nullable = false)
     private String chassis;
 
     @Column(name = "chassis_cedente", length = 12)

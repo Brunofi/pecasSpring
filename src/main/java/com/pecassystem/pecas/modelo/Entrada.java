@@ -21,7 +21,7 @@ public class Entrada {
     @Column(name = "quantidade_entrada", nullable = false)
     private int quantidadeEntrada;
 
-    @Column(name = "motivo", length = 20)
+    @Column(name = "motivo", length = 50)
     private String motivo;
 
     @Column(name = "colaborador", length = 20)
