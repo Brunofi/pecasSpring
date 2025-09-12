@@ -98,5 +98,45 @@ public class OrcamentoControle {
             return new ResponseEntity<>(respostaModelo, HttpStatus.NOT_FOUND);
         }
     }
-}
 
+    @GetMapping("/filtrar")
+    public ResponseEntity<?> listarPorFiltros(
+            @RequestParam String chassis,
+            @RequestParam String etapa,
+            @RequestParam(required = false) String sessao,
+            @RequestParam(required = false) String motivo) {
+
+        try {
+            Iterable<Orcamento> orcamentos = orcamentoServico.listarPorFiltros(
+                    chassis, etapa, sessao, motivo);
+
+            if (orcamentos.iterator().hasNext()) {
+                return ResponseEntity.ok(orcamentos);
+            } else {
+                return ResponseEntity.noContent().build();
+            }
+        } catch (RuntimeException e) {
+            respostaModelo.setMensagem(e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            respostaModelo.setMensagem("Erro ao buscar orçamentos: " + e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/cancelar/{id}")
+    public ResponseEntity<RespostaModelo> cancelarSolicitacao(@PathVariable int id) {
+        try {
+            orcamentoServico.cancelarSolicitacao(id);
+            respostaModelo.setMensagem("Solicitação cancelada com sucesso!");
+            return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            respostaModelo.setMensagem(e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            respostaModelo.setMensagem("Erro ao cancelar solicitação: " + e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+}

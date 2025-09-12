@@ -1,7 +1,10 @@
 package com.pecassystem.pecas.servico;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pecassystem.pecas.modelo.Orcamento;
 import com.pecassystem.pecas.repositorio.OrcamentoRepositorio;
@@ -14,6 +17,7 @@ public class OrcamentoServico {
 
     // Cadastra um novo orçamento ou atualiza existente
     public Orcamento cadastrar(Orcamento orcamento) {
+        orcamento.setDataPedido(LocalDateTime.now());
         return orcamentoRepositorio.save(orcamento);
     }
 
@@ -32,5 +36,47 @@ public class OrcamentoServico {
     public void remover(int id) {
         orcamentoRepositorio.deleteById(id);
     }
-}
 
+    public Iterable<Orcamento> listarPorFiltros(
+            String chassis,
+            String etapa,
+            String sessao,
+            String motivo) {
+        // Validação dos campos obrigatórios
+        if (chassis == null || chassis.isBlank() || etapa == null || etapa.isBlank()) {
+            throw new RuntimeException("Chassis e etapa são obrigatórios");
+        }
+
+        Orcamento.MotivoConsumo motivoEnum = null;
+
+        if (motivo != null && !motivo.isBlank()) {
+            try {
+                motivoEnum = Orcamento.MotivoConsumo.valueOf(motivo.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("Motivo inválido: " + motivo);
+            }
+        }
+
+        return orcamentoRepositorio.buscarPorFiltros(
+                chassis,
+                etapa,
+                (sessao != null && !sessao.isBlank()) ? sessao : null,
+                motivoEnum);
+    }
+
+    @Transactional
+    public void cancelarSolicitacao(int id) {
+        Orcamento orcamento = orcamentoRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Solicitação não encontrada"));
+
+        // Verifica se pode cancelar
+        if (!orcamento.getStatusPeca().equals("PENDENTE") &&
+                !orcamento.getStatusPeca().equals("SEPARADA")) {
+            throw new RuntimeException("Só é possível cancelar solicitações com status PENDENTE ou SEPARADA");
+        }
+
+        orcamento.setStatusPeca("CANCELADA");
+        orcamentoRepositorio.save(orcamento);
+    }
+
+}
