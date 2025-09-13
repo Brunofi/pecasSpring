@@ -20,6 +20,8 @@ public class PecaServico {
         return pecaRepositorio.findAll();
     }
 
+    
+        
      // Método para buscar peças por partNumber
      public Iterable<Peca> listarPorPartnumber(String partnumber) {
         try {
@@ -30,6 +32,15 @@ public class PecaServico {
            
         }
         
+    }
+    
+
+    public Iterable<Peca> listarDistinctPorPartnumber(String partnumber) {
+        try {
+            return pecaRepositorio.findDistinctByPartnumberContaining(partnumber);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao procurar peças distintas: " + e.getMessage());
+        }
     }
 
     // Método para buscar peças por nome

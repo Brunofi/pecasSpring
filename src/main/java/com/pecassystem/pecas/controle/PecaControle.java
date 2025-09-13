@@ -65,6 +65,31 @@ public class PecaControle {
         }
     }
 
+    @GetMapping("/listar-distinct")
+    public ResponseEntity<Iterable<Peca>> listarDistinct(
+            @RequestParam(required = false) String partnumber,
+            @RequestParam(required = false) String nome) {
+
+        Iterable<Peca> pecas;
+
+        // Esta lógica pode ser adaptada. Talvez você queira só por partnumber mesmo.
+        if (partnumber != null && !partnumber.isEmpty()) {
+            pecas = pecaServico.listarDistinctPorPartnumber(partnumber);
+        } else if (nome != null && !nome.isEmpty()) {
+            // Cuidado: Se quiser distinct por nome, precisa criar outro método.
+            // Por enquanto, vamos usar o listar normal para nome.
+            pecas = pecaServico.listarPorNome(nome);
+        } else {
+            pecas = pecaServico.listar();
+        }
+
+        if (pecas.iterator().hasNext()) {
+            return new ResponseEntity<>(pecas, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
     @GetMapping("/buscar/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable int id) {
         try {
