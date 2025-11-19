@@ -139,4 +139,29 @@ public class OrcamentoControle {
         }
     }
 
+    @GetMapping("/filtrar-flexivel")
+    public ResponseEntity<?> listarPorFiltrosFlexiveis(
+            @RequestParam(required = false) String chassis,
+            @RequestParam(required = false) String etapa,
+            @RequestParam(required = false) String sessao,
+            @RequestParam(required = false) String status) {
+
+        try {
+            Iterable<Orcamento> orcamentos = orcamentoServico.listarPorFiltrosFlexiveis(
+                    chassis, etapa, sessao, status);
+
+            if (orcamentos.iterator().hasNext()) {
+                return ResponseEntity.ok(orcamentos);
+            } else {
+                return ResponseEntity.noContent().build();
+            }
+        } catch (RuntimeException e) {
+            respostaModelo.setMensagem(e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            respostaModelo.setMensagem("Erro ao buscar orçamentos: " + e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
