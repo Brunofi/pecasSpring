@@ -60,6 +60,9 @@ public class CambioControle {
             respostaModelo.setMensagem("Câmbio cadastrado com sucesso!");
             respostaModelo.setData(novoCambio);
             return new ResponseEntity<>(respostaModelo, HttpStatus.CREATED);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            respostaModelo.setMensagem("Já existe um câmbio cadastrado com este número.");
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             respostaModelo.setMensagem(e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -80,6 +83,9 @@ public class CambioControle {
             respostaModelo.setMensagem("Câmbio alterado com sucesso!");
             respostaModelo.setData(cambioAtualizado);
             return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            respostaModelo.setMensagem("Já existe um câmbio cadastrado com este número.");
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             respostaModelo.setMensagem(e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -99,4 +105,3 @@ public class CambioControle {
         }
     }
 }
-
