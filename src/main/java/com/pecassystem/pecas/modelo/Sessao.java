@@ -21,6 +21,6 @@ public class Sessao {
     private int id;
 
     @Size(max = 20, message = "A sessão deve ter no máximo 20 caracteres")
-    @Column(name = "sessao", length = 20)
+    @Column(name = "sessao", length = 20, unique = true)
     private String sessao;
 }

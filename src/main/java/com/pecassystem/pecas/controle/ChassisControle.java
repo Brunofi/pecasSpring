@@ -68,6 +68,9 @@ public class ChassisControle {
             respostaModelo.setMensagem("Chassis cadastrado com sucesso!");
             respostaModelo.setData(novoChassis);
             return new ResponseEntity<>(respostaModelo, HttpStatus.CREATED);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            respostaModelo.setMensagem("Já existe um chassis cadastrado com este numeral.");
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             respostaModelo.setMensagem(e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -88,6 +91,9 @@ public class ChassisControle {
             respostaModelo.setMensagem("Chassis alterado com sucesso!");
             respostaModelo.setData(chassisAtualizado);
             return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            respostaModelo.setMensagem("Já existe um chassis cadastrado com este numeral.");
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             respostaModelo.setMensagem(e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -21,6 +21,6 @@ public class Chassis {
     private int id;
 
     @Size(max = 14, message = "O numeral do chassis deve ter no máximo 14 caracteres")
-    @Column(name = "numeral", length = 14)
+    @Column(name = "numeral", length = 14, unique = true)
     private String numeral;
 }

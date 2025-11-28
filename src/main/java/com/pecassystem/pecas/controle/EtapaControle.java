@@ -68,6 +68,9 @@ public class EtapaControle {
             respostaModelo.setMensagem("Etapa cadastrada com sucesso!");
             respostaModelo.setData(novaEtapa);
             return new ResponseEntity<>(respostaModelo, HttpStatus.CREATED);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            respostaModelo.setMensagem("Já existe uma etapa cadastrada com este nome.");
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             respostaModelo.setMensagem(e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -88,6 +91,9 @@ public class EtapaControle {
             respostaModelo.setMensagem("Etapa alterada com sucesso!");
             respostaModelo.setData(etapaAtualizada);
             return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            respostaModelo.setMensagem("Já existe uma etapa cadastrada com este nome.");
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             respostaModelo.setMensagem(e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);

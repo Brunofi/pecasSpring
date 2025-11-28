@@ -68,6 +68,9 @@ public class SessaoControle {
             respostaModelo.setMensagem("Sessão cadastrada com sucesso!");
             respostaModelo.setData(novaSessao);
             return new ResponseEntity<>(respostaModelo, HttpStatus.CREATED);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            respostaModelo.setMensagem("Já existe uma sessão cadastrada com este nome.");
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             respostaModelo.setMensagem(e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -88,6 +91,9 @@ public class SessaoControle {
             respostaModelo.setMensagem("Sessão alterada com sucesso!");
             respostaModelo.setData(sessaoAtualizada);
             return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            respostaModelo.setMensagem("Já existe uma sessão cadastrada com este nome.");
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             respostaModelo.setMensagem(e.getMessage());
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);

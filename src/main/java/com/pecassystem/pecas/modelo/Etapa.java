@@ -21,6 +21,6 @@ public class Etapa {
     private int id;
 
     @Size(max = 20, message = "A etapa deve ter no máximo 20 caracteres")
-    @Column(name = "etapa", length = 20)
+    @Column(name = "etapa", length = 20, unique = true)
     private String etapa;
 }
