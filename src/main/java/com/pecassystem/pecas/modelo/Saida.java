@@ -4,11 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.Instant;
-
-
-import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tbsaida")
@@ -23,9 +19,8 @@ public class Saida {
     @NotNull(message = "Quantidade é obrigatória")
     private int quantidade;
 
-    @Column(name = "data_saida", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @CreationTimestamp
-    private Instant dataSaida;
+    @Column(name = "data_saida")
+    private LocalDateTime dataSaida;
 
     @Column(name = "tipo_consumo", length = 30)
     private String tipoConsumo;

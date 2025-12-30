@@ -95,4 +95,30 @@ public class SaidaControle {
             return new ResponseEntity<>(respostaModelo, HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/buscar-lancamentos")
+    public ResponseEntity<RespostaModelo> buscarLancamentos(@RequestParam String chassis, @RequestParam String etapa) {
+        respostaModelo = new RespostaModelo();
+        try {
+            List<Saida> saidas = saidaServico.listarPorChassisEEtapa(chassis, etapa);
+            respostaModelo.setData(saidas);
+            return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            respostaModelo.setMensagem("Erro ao buscar lançamentos: " + e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/desfazer/{id}")
+    public ResponseEntity<RespostaModelo> desfazerLancamento(@PathVariable int id) {
+        respostaModelo = new RespostaModelo();
+        try {
+            saidaServico.desfazerLancamento(id);
+            respostaModelo.setMensagem("Lançamento desfeito com sucesso! Estoque atualizado.");
+            return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            respostaModelo.setMensagem(e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
+        }
+    }
 }
