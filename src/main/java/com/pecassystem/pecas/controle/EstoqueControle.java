@@ -172,4 +172,21 @@ public class EstoqueControle {
         }
     }
 
+    @PutMapping("/trocar-locacao")
+    public ResponseEntity<?> trocarLocacao(
+            @RequestParam int idEstoque,
+            @RequestParam int idNovaLocacao) {
+
+        respostaModelo = new RespostaModelo();
+
+        try {
+            estoqueServico.trocarLocacao(idEstoque, idNovaLocacao);
+            respostaModelo.setMensagem("Troca de locação realizada com sucesso!");
+            return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            respostaModelo.setMensagem(e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

@@ -177,4 +177,13 @@ public class EstoqueServico {
             throw new RuntimeException("Erro ao realizar movimentação: " + e.getMessage());
         }
     }
+
+    @Transactional
+    public void trocarLocacao(int idEstoque, int idNovaLocacao) {
+        Estoque estoque = buscarPorId(idEstoque);
+        Locacao novaLocacao = locacaoServico.buscarPorId(idNovaLocacao);
+
+        estoque.setLocacao(novaLocacao);
+        estoqueRepositorio.save(estoque);
+    }
 }
