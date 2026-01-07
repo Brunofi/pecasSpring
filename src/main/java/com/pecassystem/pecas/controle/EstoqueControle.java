@@ -154,4 +154,22 @@ public class EstoqueControle {
         }
     }
 
+    @PutMapping("/movimentar")
+    public ResponseEntity<?> movimentarEntreLocacoes(
+            @RequestParam int idOrigem,
+            @RequestParam int idDestino,
+            @RequestParam int quantidade) {
+
+        respostaModelo = new RespostaModelo();
+
+        try {
+            estoqueServico.movimentarEntreLocacoes(idOrigem, idDestino, quantidade);
+            respostaModelo.setMensagem("Movimentação realizada com sucesso!");
+            return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            respostaModelo.setMensagem(e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

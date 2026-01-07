@@ -2,6 +2,7 @@ package com.pecassystem.pecas.servico;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pecassystem.pecas.repositorio.EstoqueRepositorio;
 import com.pecassystem.pecas.modelo.Estoque;
@@ -137,6 +138,43 @@ public class EstoqueServico {
             return estoqueRepositorio.save(estoque);
         } catch (Exception e) {
             throw new RuntimeException("Erro ao alterar a quantidade do estoque: " + e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void movimentarEntreLocacoes(int idEstoqueOrigem, int idEstoqueDestino, int quantidade) {
+        try {
+            if (quantidade <= 0) {
+                throw new RuntimeException("A quantidade a ser transferida deve ser maior que 0.");
+            }
+
+            Estoque estoqueOrigem = buscarPorId(idEstoqueOrigem);
+            Estoque estoqueDestino = buscarPorId(idEstoqueDestino);
+
+            if (estoqueOrigem.getQuantidade() < quantidade) {
+                throw new RuntimeException("Saldo insuficiente na locação de origem.");
+            }
+
+            // Validação de segurança para evitar NullPointerException
+            if (estoqueOrigem.getPeca() == null || estoqueDestino.getPeca() == null) {
+                throw new RuntimeException("Erro de integridade: Peça não associada ao estoque.");
+            }
+
+            if (estoqueOrigem.getPeca().getId() != estoqueDestino.getPeca().getId()) {
+                throw new RuntimeException(
+                        "Não é possível movimentar entre peças diferentes (verifique o PartNumber).");
+            }
+
+            estoqueOrigem.setQuantidade(estoqueOrigem.getQuantidade() - quantidade);
+            estoqueDestino.setQuantidade(estoqueDestino.getQuantidade() + quantidade);
+
+            estoqueRepositorio.save(estoqueOrigem);
+            estoqueRepositorio.save(estoqueDestino);
+        } catch (RuntimeException e) {
+            throw e; // Relança exceções de tempo de execução já tratadas (ex: saldo insuficiente)
+        } catch (Exception e) {
+            e.printStackTrace(); // Log no servidor para debug
+            throw new RuntimeException("Erro ao realizar movimentação: " + e.getMessage());
         }
     }
 }
