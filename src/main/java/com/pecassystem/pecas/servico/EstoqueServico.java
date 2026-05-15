@@ -8,7 +8,11 @@ import com.pecassystem.pecas.repositorio.EstoqueRepositorio;
 import com.pecassystem.pecas.modelo.Estoque;
 import com.pecassystem.pecas.modelo.Locacao;
 import com.pecassystem.pecas.modelo.Peca;
+import com.pecassystem.pecas.modelo.ControleInventario;
+import com.pecassystem.pecas.modelo.InventarioItemDTO;
+import com.pecassystem.pecas.repositorio.ControleInventarioRepositorio;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,6 +26,9 @@ public class EstoqueServico {
 
     @Autowired
     private LocacaoServico locacaoServico;
+
+    @Autowired
+    private ControleInventarioRepositorio controleInventarioRepositorio;
 
     // Cadastra recebendo IDs
     public Estoque cadastrarComIds(int idPeca, int idLocacao) {
@@ -185,5 +192,27 @@ public class EstoqueServico {
 
         estoque.setLocacao(novaLocacao);
         estoqueRepositorio.save(estoque);
+    }
+
+    @Transactional
+    public void aplicarInventarioLote(List<InventarioItemDTO> lotes, String nomeColaborador) {
+        for (InventarioItemDTO item : lotes) {
+            Estoque estoque = buscarPorId(item.getIdEstoque());
+            
+            int quantidadeVelha = estoque.getQuantidade();
+            if (quantidadeVelha != item.getQuantidadeAtual()) {
+                estoque.setQuantidade(item.getQuantidadeAtual());
+                estoqueRepositorio.save(estoque);
+
+                ControleInventario log = new ControleInventario();
+                log.setEstoque(estoque);
+                log.setQuantidadeVelha(quantidadeVelha);
+                log.setQuantidadeAtual(item.getQuantidadeAtual());
+                log.setNomeColaborador(nomeColaborador);
+                log.setDataInventario(LocalDateTime.now());
+
+                controleInventarioRepositorio.save(log);
+            }
+        }
     }
 }

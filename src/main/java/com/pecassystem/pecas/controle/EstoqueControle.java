@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pecassystem.pecas.modelo.Estoque;
+import com.pecassystem.pecas.modelo.InventarioItemDTO;
 import com.pecassystem.pecas.modelo.RespostaModelo;
 import com.pecassystem.pecas.servico.EstoqueServico;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -188,5 +189,23 @@ public class EstoqueControle {
             return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PutMapping("/inventario/lote")
+    public ResponseEntity<?> aplicarInventarioLote(
+            @RequestBody List<InventarioItemDTO> lotes,
+            @RequestParam String nomeColaborador) {
+
+        respostaModelo = new RespostaModelo();
+
+        try {
+            estoqueServico.aplicarInventarioLote(lotes, nomeColaborador);
+            respostaModelo.setMensagem("Inventário aplicado com sucesso!");
+            return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            respostaModelo.setMensagem(e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 }

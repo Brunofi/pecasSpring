@@ -38,7 +38,7 @@ public class Saida {
     @Column(name = "motivo_consumo", nullable = false)
     private MotivoConsumo motivoConsumo;
 
-    @Column(name = "etapa", length = 6, nullable = false)
+    @Column(name = "etapa", length = 20)
     private String etapa;
 
     @Column(name = "sessao", length = 20, nullable = false)
