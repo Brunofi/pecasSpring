@@ -102,43 +102,42 @@ public class PecaControle {
     }
 
     @PostMapping("/cadastrar")
-public ResponseEntity<?> cadastrar(@Valid @RequestBody Peca peca, BindingResult result) {
-    if (result.hasErrors()) {
-        String errorMessage = result.getFieldError().getDefaultMessage();
-        respostaModelo.setMensagem(errorMessage);
-        return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> cadastrar(@Valid @RequestBody Peca peca, BindingResult result) {
+        if (result.hasErrors()) {
+            String errorMessage = result.getFieldError().getDefaultMessage();
+            respostaModelo.setMensagem(errorMessage);
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            Peca novaPeca = pecaServico.cadastrar(peca);
+            respostaModelo.setMensagem("Peça cadastrada com sucesso!");
+            respostaModelo.setData(novaPeca);
+            return new ResponseEntity<>(respostaModelo, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            respostaModelo.setMensagem(e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    try {
-        Peca novaPeca = pecaServico.cadastrar(peca);
-        respostaModelo.setMensagem("Peça cadastrada com sucesso!");
-        respostaModelo.setData(novaPeca); 
-        return new ResponseEntity<>(respostaModelo, HttpStatus.CREATED);
-    } catch (RuntimeException e) {
-        respostaModelo.setMensagem(e.getMessage());
-        return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-}
+    @PutMapping("/alterar")
+    public ResponseEntity<?> alterar(@Valid @RequestBody Peca peca, BindingResult result) {
+        if (result.hasErrors()) {
+            String errorMessage = result.getFieldError().getDefaultMessage();
+            respostaModelo.setMensagem(errorMessage);
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
+        }
 
-@PutMapping("/alterar")
-public ResponseEntity<?> alterar(@Valid @RequestBody Peca peca, BindingResult result) {
-    if (result.hasErrors()) {
-        String errorMessage = result.getFieldError().getDefaultMessage();
-        respostaModelo.setMensagem(errorMessage);
-        return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
+        try {
+            Peca novaPeca = pecaServico.alterar(peca);
+            respostaModelo.setMensagem("Peça alterada com sucesso!");
+            respostaModelo.setData(novaPeca);
+            return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            respostaModelo.setMensagem(e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-
-    try {
-        Peca novaPeca = pecaServico.alterar(peca);
-        respostaModelo.setMensagem("Peça alterada com sucesso!");
-        respostaModelo.setData(novaPeca);
-        return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
-    } catch (RuntimeException e) {
-        respostaModelo.setMensagem(e.getMessage());
-        return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-}
-
 
     @DeleteMapping("/remover/{id}")
     public ResponseEntity<RespostaModelo> remover(@PathVariable int id) {

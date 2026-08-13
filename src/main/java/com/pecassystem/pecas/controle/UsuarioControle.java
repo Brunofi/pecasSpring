@@ -61,28 +61,27 @@ public class UsuarioControle {
             return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
 
-        @PutMapping("/alterar")
-public ResponseEntity<RespostaModelo> alterar(@Valid @RequestBody Usuario usuario, BindingResult result) {
-    respostaModelo = new RespostaModelo(); // Reinicia o modelo de resposta
-    
-    if (result.hasErrors()) {
-        String errorMessage = result.getFieldError().getDefaultMessage();
-        respostaModelo.setMensagem(errorMessage);
-        return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
-    }
+    @PutMapping("/alterar")
+    public ResponseEntity<RespostaModelo> alterar(@Valid @RequestBody Usuario usuario, BindingResult result) {
+        respostaModelo = new RespostaModelo(); // Reinicia o modelo de resposta
 
-    try {
-        Usuario usuarioAtualizado = usuarioServico.alterar(usuario);
-        respostaModelo.setMensagem("Usuário alterado com sucesso!");
-        respostaModelo.setData(usuarioAtualizado); // Opcional: incluir os dados atualizados
-        return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
-    } catch (Exception e) {
-        respostaModelo.setMensagem("Erro ao alterar usuário: " + e.getMessage());
-        return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
+        if (result.hasErrors()) {
+            String errorMessage = result.getFieldError().getDefaultMessage();
+            respostaModelo.setMensagem(errorMessage);
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            Usuario usuarioAtualizado = usuarioServico.alterar(usuario);
+            respostaModelo.setMensagem("Usuário alterado com sucesso!");
+            respostaModelo.setData(usuarioAtualizado); // Opcional: incluir os dados atualizados
+            return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
+        } catch (Exception e) {
+            respostaModelo.setMensagem("Erro ao alterar usuário: " + e.getMessage());
+            return new ResponseEntity<>(respostaModelo, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-}
 
     @DeleteMapping("/remover/{id}")
     public ResponseEntity<RespostaModelo> remover(@PathVariable int id) {
@@ -99,20 +98,20 @@ public ResponseEntity<RespostaModelo> alterar(@Valid @RequestBody Usuario usuari
     // src/main/java/com/pecassystem/pecas/controle/UsuarioControle.java
     @PostMapping("/login")
     public ResponseEntity<?> autenticar(@RequestBody Usuario usuario) {
-        Optional<Usuario> usuarioExistente = usuarioServico.buscarPorEmailESenha(usuario.getEmail(), usuario.getSenha());
+        Optional<Usuario> usuarioExistente = usuarioServico.buscarPorEmailESenha(usuario.getEmail(),
+                usuario.getSenha());
         if (usuarioExistente.isPresent()) {
             Usuario usuarioLogado = usuarioExistente.get();
             String token = JwtService.generateToken(usuarioLogado.getLogin(),
-             usuarioLogado.getPerfil(),
-             usuarioLogado.getNome()
-             ); // Passa login e perfil
-            
+                    usuarioLogado.getPerfil(),
+                    usuarioLogado.getNome()); // Passa login e perfil
+
             // Cria um objeto de resposta com token e perfil
             Map<String, Object> resposta = new HashMap<>();
             resposta.put("token", token);
             resposta.put("perfil", usuarioLogado.getPerfil());
             resposta.put("nome", usuarioLogado.getNome());
-            
+
             return ResponseEntity.ok(resposta);
         } else {
             respostaModelo.setMensagem("Login ou senha incorretos");

@@ -24,7 +24,7 @@ public class SessaoServico {
 
     // Lista todas as sessões
     public Iterable<Sessao> listar() {
-        return sessaoRepositorio.findAll();
+        return sessaoRepositorio.findAllByOrderBySessaoAsc();
     }
 
     // Remove uma sessão por ID

@@ -38,7 +38,7 @@ public class EntradaControle {
         try {
             // Define a data de entrada como agora
             entrada.setDataEntrada(LocalDateTime.now());
-            
+
             Entrada entradaCadastrada = entradaServico.cadastrar(entrada, idEstoque);
 
             respostaModelo.setMensagem("Entrada cadastrada com sucesso! Estoque atualizado.");
@@ -91,7 +91,7 @@ public class EntradaControle {
         }
     }
 
-      @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<RespostaModelo> remover(@PathVariable int id) {
         respostaModelo = new RespostaModelo();
         try {
@@ -104,5 +104,4 @@ public class EntradaControle {
         }
     }
 
-    
 }

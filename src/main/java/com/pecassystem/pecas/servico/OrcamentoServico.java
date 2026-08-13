@@ -85,14 +85,6 @@ public class OrcamentoServico {
             String sessao,
             String status) {
         
-        // Se nenhum filtro foi preenchido, retorna lista vazia
-        if ((chassis == null || chassis.isBlank()) && 
-            (etapa == null || etapa.isBlank()) && 
-            (sessao == null || sessao.isBlank()) &&
-            (status == null || status.isBlank())) {
-            return java.util.Collections.emptyList();
-        }
-
         return orcamentoRepositorio.buscarPorFiltrosFlexiveis(
                 (chassis != null && !chassis.isBlank()) ? chassis : null,
                 (etapa != null && !etapa.isBlank()) ? etapa : null,
